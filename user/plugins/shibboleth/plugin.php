@@ -3,23 +3,33 @@
 Plugin Name: Shibboleth Auth
 Plugin URI: https://github.com/fuero/yourls-shibboleth
 Description: This plugin enables use of Shibboleth's service provider for authentication
-Version: 1.0
-Author: Robert Führicht
+Version: 1.1
+Author: fuero
 Author URI: https://github.com/fuero
 */
+
+// No direct call
+if( !defined( 'YOURLS_ABSPATH' ) ) die();
 
 if (!defined('SHIBBOLETH_UID'))
         define('SHIBBOLETH_UID', 'cn');
 if (!defined('SHIBBOLETH_ENTITLEMENT'))
         define('SHIBBOLETH_ENTITLEMENT', 'entitlement');
 if (!defined('SHIBBOLETH_ENTITLEMENT_REGEX'))
-        define('SHIBBOLETH_ENTITLEMENT_REGEX', '/^.*urn:mace:dir:entitlement:yourls.local:admin.*$/');
+        define('SHIBBOLETH_ENTITLEMENT_REGEX', '/^.*urn:mace:dir:entitlement:yourls.local:.*$/');
+if (!defined('SHIBBOLETH_RBAC_ALLOW')) {
+        // Define constants for critical filters
+        define( 'SHIBBOLETH_RBAC_ALLOW', 'filter_shibboleth_rbac_allow' );
+}
+if (!defined('SHIBBOLETH_RBAC_HASROLE'))
+        define( 'SHIBBOLETH_RBAC_HASROLE', 'filter_shibboleth_rbac_hasrole' );
 
-// Hook our custom function into the 'user_auth' filter
-yourls_add_action( 'user_auth', 'shibboleth_user_auth' );
+include_once( "rbac.php" );
 
-// Add a new link in the DB, either with custom keyword, or find one
-function shibboleth_user_auth() {
+// Hook our custom function into the 'shunt_is_valid_user' filter
+yourls_add_filter( 'shunt_is_valid_user', 'shibboleth_is_valid_user' );
+
+function shibboleth_is_valid_user() {
         global $yourls_user_passwords;
         // Check for attributes set by mod_shib
         if (isset( $_SERVER[SHIBBOLETH_UID] ) && isset( $_SERVER[SHIBBOLETH_ENTITLEMENT] ) && 
@@ -38,5 +48,6 @@ function shibboleth_user_auth() {
                 }
                 return true;
         }
+        return null
 }
 
