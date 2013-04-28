@@ -29,35 +29,35 @@ Installation
     Your web server configuration need to be adjusted to accomodate Shibboleth.
     Here's a *sample* configuration you can use:
 
-    # Protect admin area with Shibboleth
-    <Location "/admin">
-            AuthType shibboleth
-            ShibRequestSetting requireSession 1
-            require valid-user
-            DirectoryIndex index.php
-    </Location>
-    # Protect stats too
-    <LocationMatch "^/.*[+]$">
-            AuthType shibboleth
-            ShibRequestSetting requireSession 1
-            require valid-user
-    </LocationMatch>
-    RewriteEngine on
-    # Redirect 'http://yourls.local/' requests to admin area
-    RewriteCond     %{REQUEST_URI}  ^/$
-    RewriteRule     .*              /admin/                 [R,L]
-    # Admin area or stats access is permitted over HTTPS only
-    RewriteCond     %{REQUEST_URI}  ^/admin                 [OR]
-    RewriteCond     %{REQUEST_URI}  ^/.*[+]$
-    RewriteCond     %{HTTPS}        !=on
-    RewriteRule     (.*)            https://yourls.local$1      [R,L]
-    # Modified default rewrite rules for short urls.
-    # Takes into account Shibboleth's service URLs, admin area, and
-    # robots.txt.
-    RewriteCond /path/to/yourls%{REQUEST_URI} !-f
-    RewriteCond /path/to/yourls%{REQUEST_URI} !-d
-    RewriteCond %{REQUEST_URI} !^/(?:shibboleth-sp|Shibboleth.sso)/
-    RewriteRule ^(.*)$ /yourls-loader.php [L]
+        # Protect admin area with Shibboleth
+        <Location "/admin">
+                AuthType shibboleth
+                ShibRequestSetting requireSession 1
+                require valid-user
+                DirectoryIndex index.php
+        </Location>
+        # Protect stats too
+        <LocationMatch "^/.*[+]$">
+                AuthType shibboleth
+                ShibRequestSetting requireSession 1
+                require valid-user
+        </LocationMatch>
+        RewriteEngine on
+        # Redirect 'http://yourls.local/' requests to admin area
+        RewriteCond     %{REQUEST_URI}  ^/$
+        RewriteRule     .*              /admin/                 [R,L]
+        # Admin area or stats access is permitted over HTTPS only
+        RewriteCond     %{REQUEST_URI}  ^/admin                 [OR]
+        RewriteCond     %{REQUEST_URI}  ^/.*[+]$
+        RewriteCond     %{HTTPS}        !=on
+        RewriteRule     (.*)            https://yourls.local$1      [R,L]
+        # Modified default rewrite rules for short urls.
+        # Takes into account Shibboleth's service URLs, admin area, and
+        # robots.txt.
+        RewriteCond /path/to/yourls%{REQUEST_URI} !-f
+        RewriteCond /path/to/yourls%{REQUEST_URI} !-d
+        RewriteCond %{REQUEST_URI} !^/(?:shibboleth-sp|Shibboleth.sso)/
+        RewriteRule ^(.*)$ /yourls-loader.php [L]
 
  *   Restart httpd for the changes to take effect.
 
