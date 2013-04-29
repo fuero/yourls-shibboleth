@@ -48,6 +48,6 @@ function shibboleth_is_valid_user() {
                 }
                 return true;
         }
-        return null
+        return null;
 }
 
