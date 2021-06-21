@@ -43,7 +43,8 @@ function shibboleth_is_valid_user() {
                 yourls_set_user( $_SERVER[SHIBBOLETH_UID] );
                 if ( !yourls_is_API() ) {
                         // Satisfy yourls' cookie generation routine
-                        $yourls_user_passwords[$_SERVER[SHIBBOLETH_UID]]=md5($_SERVER[SHIBBOLETH_UID]);
+                        $salt = rand( 10000, 99999 );
+                        $yourls_user_passwords[$_SERVER[SHIBBOLETH_UID]]='md5:' . $salt . ':' . md5($salt . $_SERVER[SHIBBOLETH_UID]);
                         yourls_store_cookie( YOURLS_USER );
                 }
                 return true;
