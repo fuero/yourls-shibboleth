@@ -340,7 +340,7 @@ function shibboleth_rbac_environment_check() {
  */
 function shibboleth_rbac_cidr_match($ip, $range)
 {
-    list ($subnet, $bits) = split('/', $range);
+    list ($subnet, $bits) = explode('/', $range);
     $ip = ip2long($ip);
     $subnet = ip2long($subnet);
     $mask = -1 << (32 - $bits);
