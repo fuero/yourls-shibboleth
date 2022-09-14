@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.2
+ *   Merged pull requests by @clmcavaney and @emon
+
 ## Version 1.1
  *   Using new hook provided by [ozh](http://github.com/ozh).
  *   Licencing under terms of GPLv2 or later to be compatible with
